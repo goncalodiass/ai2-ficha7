@@ -5,7 +5,7 @@ import { BrowserRouter as Router, Route, Link, Routes } from "react-router-dom";
 
 import MoviesList from './view/MoviesList';
 import MoviesAdd from './view/MoviesAdd';
-import EmployeeEdit from './view/MoviesEdit';
+import MoviesEdit from './view/MoviesEdit';
 
 
 function App() {
@@ -14,7 +14,7 @@ function App() {
   return (
     <Router>
       <div className="App">
-        <nav className="navbar navbar-expand-lg navbar-dark bgdark">
+        <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
           <a className="navbar-brand text-danger"
             href="/filmes"> Movies</a>
           <button className="navbar-toggler" type="button" datatoggle="collapse" data-target="#navbarSupportedContent"
@@ -33,8 +33,8 @@ function App() {
             <Routes>
               <Route path="/filmes/" element={<MoviesList />} />
               <Route path="/filmes/add" element={<MoviesAdd />} />
-              <Route path="/filmes/edit/:employeeId"
-                element={<EmployeeEdit />} />
+              <Route path="/filmes/edit/:moviesId"
+                element={<MoviesEdit />} />
             </Routes>
           </div>
         </div>
