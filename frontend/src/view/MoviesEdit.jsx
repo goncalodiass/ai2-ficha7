@@ -1,6 +1,3 @@
-import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap/dist/js/bootstrap.bundle.min";
-
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
@@ -11,9 +8,10 @@ const MoviesEdit = () => {
     const [campTítulo, setcampTítulo] = useState("");
     const [campDescrição, setcampDescrição] = useState("");
     const [campFoto, setcampFoto] = useState("");
+    const [isValidFoto, setIsValidFoto] = useState(true); // Estado para validar o link da foto
     const [stringRole, setstringRole] = useState("");
     const [selectGenero, setselectGenero] = useState("");
-    const [generos, setGeneros] = useState([]); // Estado para armazenar os gêneros
+    const [generos, setGeneros] = useState([]);
 
     const { moviesId } = useParams();
 
@@ -43,7 +41,7 @@ const MoviesEdit = () => {
             try {
                 const response = await axios.get(`${baseUrl}/genero/list`);
                 if (response.data.success) {
-                    setGeneros(response.data.data); 
+                    setGeneros(response.data.data);
                 } else {
                     alert("Erro ao carregar os gêneros.");
                 }
@@ -55,6 +53,18 @@ const MoviesEdit = () => {
         fetchMovie();
         fetchGeneros();
     }, [moviesId]);
+
+    // Validação do link da foto
+    useEffect(() => {
+        if (campFoto) {
+            const img = new Image();
+            img.onload = () => setIsValidFoto(true);
+            img.onerror = () => setIsValidFoto(false);
+            img.src = campFoto;
+        } else {
+            setIsValidFoto(true); // Reseta a validação se o campo estiver vazio
+        }
+    }, [campFoto]);
 
     function SendUpdate() {
         const url = `${baseUrl}/filmes/update/${moviesId}`;
@@ -83,9 +93,9 @@ const MoviesEdit = () => {
 
     return (
         <div>
-            <div className="form-row justify-content-center">
-                <div className="form-group col-md-6">
-                    <label htmlFor="inputPassword4">Título</label>
+            <div className="form-group row mb-3">
+                <label htmlFor="inputPassword4" className="col-sm-2 col-md-1 col-formlabel">Título</label>
+                <div className="col-sm-10">
                     <input
                         type="text"
                         className="form-control"
@@ -94,8 +104,10 @@ const MoviesEdit = () => {
                         onChange={(e) => setcampTítulo(e.target.value)}
                     />
                 </div>
-                <div className="form-group col-md-6">
-                    <label htmlFor="inputEmail4">Descrição</label>
+            </div>
+            <div className="form-group row mb-3">
+                <label htmlFor="inputEmail4" className="col-sm-2 col-md-1 col-formlabel">Descrição</label>
+                <div className="col-sm-10">
                     <textarea
                         className="form-control"
                         placeholder="Descrição"
@@ -104,9 +116,41 @@ const MoviesEdit = () => {
                     />
                 </div>
             </div>
-            <div className="form-row">
-                <div className="form-group col-md-6">
-                    <label htmlFor="inputState">Gênero</label>
+            <div className="form-group row mb-3">
+                <label htmlFor="inputPhoto" className="col-sm-2 col-md-1 col-formlabel">Link da Foto</label>
+                <div className="col-sm-10">
+                    <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Insira o link da foto"
+                        value={campFoto}
+                        onChange={(e) => setcampFoto(e.target.value)}
+                    />
+                </div>
+            </div>
+            {campFoto && (
+                <div className="form-group row mb-3">
+                    {isValidFoto ? (
+                        <>
+                            <label htmlFor="previewLink" className="col-sm-2 col-md-1 col-formlabel">Preview da Foto</label>
+                            <div className="col-sm-10">
+                                <img
+                                    src={campFoto}
+                                    alt="Pré-visualização"
+                                    style={{ width: "150px", height: "auto", border: "1px solid #ddd", padding: "5px" }}
+                                />
+                            </div>
+                        </>
+                    ) : (
+                        <div className="col-sm-10">
+                            <p style={{ color: "red" }}>O link da foto é inválido.</p>
+                        </div>
+                    )}
+                </div>
+            )}
+            <div className="form-group row mb-3">
+                <label htmlFor="inputState" className="col-sm-2 col-md-1 col-formlabel">Gênero</label>
+                <div className="col-sm-10">
                     <select
                         id="inputState"
                         className="form-control"

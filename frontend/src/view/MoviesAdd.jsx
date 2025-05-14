@@ -8,15 +8,15 @@ const MoviesAdd = () => {
     const [campDescrição, setcampDescrição] = useState("");
     const [campFoto, setcampFoto] = useState("");
     const [selectGenero, setselectGenero] = useState("");
-    const [generos, setGeneros] = useState([]); // Estado para armazenar os gêneros
+    const [generos, setGeneros] = useState([]);
+    const [isValidFoto, setIsValidFoto] = useState(true); // Estado para validar o link da foto
 
     useEffect(() => {
-        // Busca os gêneros da API
         const fetchGeneros = async () => {
             try {
-                const response = await axios.get("http://localhost:3000/genero/list"); // Substitua pela URL correta da sua API
+                const response = await axios.get("http://localhost:3000/genero/list");
                 if (response.data.success) {
-                    setGeneros(response.data.data); // Supondo que os gêneros estão em response.data.data
+                    setGeneros(response.data.data);
                 } else {
                     alert("Erro ao carregar os gêneros.");
                 }
@@ -28,8 +28,29 @@ const MoviesAdd = () => {
         fetchGeneros();
     }, []);
 
+    // Validação do link da foto
+    useEffect(() => {
+        if (campFoto) {
+            const img = new Image();
+            img.onload = () => setIsValidFoto(true);
+            img.onerror = () => setIsValidFoto(false);
+            img.src = campFoto;
+        } else {
+            setIsValidFoto(true); // Reseta a validação se o campo estiver vazio
+        }
+    }, [campFoto]);
+
     function SendSave(e) {
         if (e) e.preventDefault();
+        if (!campTítulo || !campDescrição || !campFoto || !selectGenero) {
+            alert("Por favor, preencha todos os campos.");
+            return;
+        }
+        if (!isValidFoto) {
+            alert("O link da foto é inválido.");
+            return;
+        }
+
         const baseUrl = "http://localhost:3000/filmes/create";
         const datapost = {
             titulo: campTítulo,
@@ -77,6 +98,39 @@ const MoviesAdd = () => {
                 </div>
             </div>
             <div className="form-group row mb-3">
+                <label htmlFor="photoLink" className="col-sm-2 col-md-1 col-formlabel">Link da Foto</label>
+                <div className="col-sm-10">
+                    <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Insira o link da foto"
+                        value={campFoto}
+                        onChange={(e) => setcampFoto(e.target.value)}
+                    />
+                </div>
+            </div>
+            <br />
+            {campFoto && (
+                <div className="form-group row mb-3">
+                    {isValidFoto ? (
+                        <>
+                            <label htmlFor="previewLink" className="col-sm-2 col-md-1 col-formlabel">Preview da Foto</label>
+                            <div className="col-sm-10">
+                                <img
+                                    src={campFoto}
+                                    alt="Pré-visualização"
+                                    style={{ width: "150px", height: "auto", border: "1px solid #ddd", padding: "5px" }}
+                                />
+                            </div>
+                        </>
+                    ) : (
+                        <div className="col-sm-10">
+                            <p style={{ color: "red" }}>O link da foto é inválido.</p>
+                        </div>
+                    )}
+                </div>
+            )}
+            <div className="form-group row mb-3">
                 <label htmlFor="role" className="col-sm-2 col-md-1 col-formlabel">Gênero</label>
                 <div className="col-sm-10">
                     <select
@@ -88,7 +142,7 @@ const MoviesAdd = () => {
                         <option value="" disabled>Escolha um gênero...</option>
                         {generos.map((genero) => (
                             <option key={genero.id} value={genero.id}>
-                                {genero.genero} {/* Supondo que o nome do gênero está em genero.genero */}
+                                {genero.genero}
                             </option>
                         ))}
                     </select>
@@ -99,7 +153,7 @@ const MoviesAdd = () => {
                 className="btn btn-primary"
                 onClick={SendSave}
             >
-                Salvar
+                Guardar
             </button>
         </div>
     );

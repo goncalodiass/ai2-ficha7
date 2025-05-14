@@ -56,8 +56,14 @@ const MoviesList = () => {
                     <th>{data.id}</th>
                     <td>{data.título}</td>
                     <td>{data.descrição}</td>
-                    <td>{data.foto}</td>
                     <td>{data.genero.genero}</td>
+                    <td>
+                        <img
+                            src={data.foto}
+                            alt={data.título}
+                            style={{ width: "75px", height: "auto" }}
+                        />
+                    </td>
                     <td>
                         <Link className="btn btn-outline-info" to={"filmes/edit/" + data.id} >Edit</Link>
                     </td>
@@ -74,14 +80,14 @@ const MoviesList = () => {
 
 
     return (
-        <table className="table table-hover tablestriped">
+        <table className="table table-hover table-striped">
             <thead className="thead-dark">
                 <tr>
                     <th scope="col">#</th>
                     <th scope="col">título</th>
                     <th scope="col">descrição</th>
-                    <th scope="col">foto</th>
                     <th scope="col">genero</th>
+                    <th scope="col">foto</th>
                     <th colSpan="2">action</th>
                 </tr>
             </thead>
