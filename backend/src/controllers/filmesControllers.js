@@ -110,14 +110,27 @@ controllers.update = async (req, res) => {
 };
 
 controllers.delete = async (req, res) => {
-    // parâmetros por post
-    const { id } = req.body;
-    // delete por sequelize
-    const del = await Filmes.destroy({
-        where: { id: id }
-    })
-    res.json({ success: true, deleted: del, message: "Deleted successful" });
-}
+    const { id } = req.body; // Recebe o ID do filme a ser deletado
+
+    try {
+        const result = await Filmes.destroy({
+            where: { id: id },
+        });
+
+        if (result) {
+            res.json({ success: true, message: "Filme deletado com sucesso!" });
+        } else {
+            res.json({ success: false, message: "Filme não encontrado!" });
+        }
+    } catch (error) {
+        console.error("Erro ao deletar filme:", error);
+        res.status(500).json({
+            success: false,
+            message: "Erro ao deletar o filme.",
+            error: error.message,
+        });
+    }
+};
 
 
 

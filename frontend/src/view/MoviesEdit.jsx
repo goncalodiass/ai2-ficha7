@@ -13,15 +13,16 @@ const MoviesEdit = () => {
     const [campFoto, setcampFoto] = useState("");
     const [stringRole, setstringRole] = useState("");
     const [selectGenero, setselectGenero] = useState("");
+    const [generos, setGeneros] = useState([]); // Estado para armazenar os gêneros
 
-    const { moviesId } = useParams(); // Correção: Certifique-se de usar o nome correto
+    const { moviesId } = useParams();
 
     useEffect(() => {
-        const url = `${baseUrl}/filmes/get/${moviesId}`;
-
-        axios
-            .get(url)
-            .then((res) => {
+        // Busca os dados do filme
+        const fetchMovie = async () => {
+            const url = `${baseUrl}/filmes/get/${moviesId}`;
+            try {
+                const res = await axios.get(url);
                 if (res.data.success) {
                     const data = res.data.data[0];
                     setcampTítulo(data.título);
@@ -32,10 +33,27 @@ const MoviesEdit = () => {
                 } else {
                     alert("Erro ao carregar os dados do filme.");
                 }
-            })
-            .catch((error) => {
-                alert("Erro no servidor: " + error);
-            });
+            } catch (error) {
+                alert("Erro no servidor: " + error.message);
+            }
+        };
+
+        // Pesquisar os gêneros da API
+        const fetchGeneros = async () => {
+            try {
+                const response = await axios.get(`${baseUrl}/genero/list`);
+                if (response.data.success) {
+                    setGeneros(response.data.data); 
+                } else {
+                    alert("Erro ao carregar os gêneros.");
+                }
+            } catch (error) {
+                alert("Erro ao buscar os gêneros: " + error.message);
+            }
+        };
+
+        fetchMovie();
+        fetchGeneros();
     }, [moviesId]);
 
     function SendUpdate() {
@@ -47,7 +65,7 @@ const MoviesEdit = () => {
             genero: selectGenero,
         };
 
-        console.log("Dados enviados para o backend:", datapost); // Verifica os dados enviados
+        console.log("Dados enviados para o backend:", datapost);
 
         axios
             .put(url, datapost)
@@ -93,14 +111,16 @@ const MoviesEdit = () => {
                         id="inputState"
                         className="form-control"
                         value={selectGenero}
-                        onChange={(e) => setselectGenero(e.target.value)} // Atualiza o estado corretamente
+                        onChange={(e) => setselectGenero(e.target.value)}
                     >
                         <option value="" disabled>
                             {stringRole || "Selecione um gênero"}
                         </option>
-                        <option value="1">Comédia</option>
-                        <option value="5">Ação</option>
-                        <option value="6">Romance</option>
+                        {generos.map((genero) => (
+                            <option key={genero.id} value={genero.id}>
+                                {genero.genero} 
+                            </option>
+                        ))}
                     </select>
                 </div>
             </div>

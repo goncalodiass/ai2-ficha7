@@ -28,6 +28,27 @@ const MoviesList = () => {
             });
     }
 
+    function SendDelete(movieId) {
+        // url do backend
+        const baseUrl = "http://localhost:3000/filmes/delete"
+        // network
+        axios.post(baseUrl, {
+            id: movieId
+        })
+            .then(response => {
+                if (response.data.success) {
+                    alert("Filme deletado com sucesso!");
+                    LoadMovies();
+                } else {
+                    alert("Erro ao deletar o filme: " + res.data.message);
+
+                }
+            })
+            .catch(error => {
+                alert("Erro no servidor: " + error.message);
+            });
+    }
+
     function LoadFillData() {
         return dataMovies.map((data, index) => {
             return (
@@ -38,15 +59,19 @@ const MoviesList = () => {
                     <td>{data.foto}</td>
                     <td>{data.genero.genero}</td>
                     <td>
-                        <Link className="btn btn-outline-info" to={"filmes/edit/"+data.id} >Edit</Link>
+                        <Link className="btn btn-outline-info" to={"filmes/edit/" + data.id} >Edit</Link>
                     </td>
                     <td>
-                        <button className="btn btn-outline-danger">Delete</button>
+                        <button className="btn btn-outline-danger" onClick={() => SendDelete(data.id)} // Chama a função de deletar
+                        >
+                            Delete
+                        </button>
                     </td>
                 </tr>
             );
         });
     }
+
 
     return (
         <table className="table table-hover tablestriped">
