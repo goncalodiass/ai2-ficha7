@@ -16,7 +16,7 @@ function App() {
       <div className="App">
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
           <a className="navbar-brand text-danger"
-            href="/filmes"> Movies</a>
+            href="/"> Movies</a>
           <button className="navbar-toggler" type="button" datatoggle="collapse" data-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" ariaexpanded="false" aria-label="Toggle navigation">
             <span className="navbar-toggler-icon"></span>
@@ -24,17 +24,16 @@ function App() {
           <div className="collapse navbar-collapse"
             id="navbarSupportedContent">
             <Link className="btn btn-success " to="/filmes/add">
-              Add Employee
+              Add Movie
             </Link>
           </div>
         </nav>
         <div className="container py-4">
           <div className="row">
             <Routes>
-              <Route path="/filmes/" element={<MoviesList />} />
+              <Route path="/" element={<MoviesList />} />
               <Route path="/filmes/add" element={<MoviesAdd />} />
-              <Route path="/filmes/edit/:moviesId"
-                element={<MoviesEdit />} />
+              <Route path="/filmes/edit/:moviesId" element={<MoviesEdit />} />
             </Routes>
           </div>
         </div>

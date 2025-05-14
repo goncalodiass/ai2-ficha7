@@ -84,30 +84,30 @@ controllers.create = async (req, res) => {
     });
 };
 
-
 controllers.update = async (req, res) => {
-    // parameter get id
     const { id } = req.params;
-    // parameter POST
     const { titulo, descricao, foto, genero } = req.body;
-    // Update data
-    const data = await Filmes.update({
-        titulo: titulo,
-        descricao: descricao,
-        foto: foto,
-        genero: genero
-    },
+
+    const data = await Filmes.update(
         {
-            where: { id: id }
-        })
-        .then(function (data) {
+            título: titulo,
+            descrição: descricao, 
+            foto: foto,
+            generoId: genero, 
+        },
+        {
+            where: { id: id },
+        }
+    )
+        .then((data) => {
             return data;
         })
-        .catch(error => {
+        .catch((error) => {
             return error;
-        })
-    res.json({ success: true, data: data, message: "Updated successful" });
-}
+        });
+
+    res.json({ success: true, data: data, message: "Atualizado com sucesso!" });
+};
 
 controllers.delete = async (req, res) => {
     // parâmetros por post

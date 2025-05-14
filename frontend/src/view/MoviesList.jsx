@@ -38,7 +38,7 @@ const MoviesList = () => {
                     <td>{data.foto}</td>
                     <td>{data.genero.genero}</td>
                     <td>
-                        <Link className="btn btn-outline-info" to={"edit/"+data.id} >Edit</Link>
+                        <Link className="btn btn-outline-info" to={"filmes/edit/"+data.id} >Edit</Link>
                     </td>
                     <td>
                         <button className="btn btn-outline-danger">Delete</button>
