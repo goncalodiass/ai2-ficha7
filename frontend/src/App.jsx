@@ -6,7 +6,7 @@ import { BrowserRouter as Router, Route, Link, Routes } from "react-router-dom";
 import MoviesList from './view/MoviesList';
 import MoviesAdd from './view/MoviesAdd';
 import MoviesEdit from './view/MoviesEdit';
-
+import Generos from './view/Generos';
 
 function App() {
   const [count, setCount] = useState(0)
@@ -26,6 +26,10 @@ function App() {
             <Link className="btn btn-success " to="/filmes/add">
               Add Movie
             </Link>
+            :&nsp;
+            <Link className="btn btn-success " to="/generos">
+              Generos
+            </Link>
           </div>
         </nav>
         <div className="container py-4">
@@ -34,6 +38,7 @@ function App() {
               <Route path="/" element={<MoviesList />} />
               <Route path="/filmes/add" element={<MoviesAdd />} />
               <Route path="/filmes/edit/:moviesId" element={<MoviesEdit />} />
+              <Route path="/generos" element={<Generos />} />
             </Routes>
           </div>
         </div>

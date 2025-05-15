@@ -5,6 +5,8 @@ import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 
+import { Toaster, toast } from 'sonner';
+
 const urlAPI = "http://localhost:3000/filmes/list";
 
 const MoviesList = () => {
@@ -37,7 +39,9 @@ const MoviesList = () => {
         })
             .then(response => {
                 if (response.data.success) {
-                    alert("Filme deletado com sucesso!");
+                    //alert("Filme deletado com sucesso!");
+                    toast.success(`Filme "${movieId.titulo}" eliminado com sucesso!`);
+
                     LoadMovies();
                 } else {
                     alert("Erro ao deletar o filme: " + res.data.message);
@@ -80,6 +84,9 @@ const MoviesList = () => {
 
 
     return (
+        <>
+        <Toaster richColors position="top-right" />
+
         <table className="table table-hover table-striped">
             <thead className="thead-dark">
                 <tr>
@@ -96,6 +103,7 @@ const MoviesList = () => {
 
             </tbody>
         </table>
+        </>
     );
 };
 export default MoviesList;

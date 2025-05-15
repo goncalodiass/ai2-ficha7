@@ -3,6 +3,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 import axios from 'axios';
 
+import { Toaster, toast } from 'sonner';
+
 const MoviesAdd = () => {
     const [campTítulo, setcampTítulo] = useState("");
     const [campDescrição, setcampDescrição] = useState("");
@@ -43,7 +45,9 @@ const MoviesAdd = () => {
     function SendSave(e) {
         if (e) e.preventDefault();
         if (!campTítulo || !campDescrição || !campFoto || !selectGenero) {
-            alert("Por favor, preencha todos os campos.");
+            //alert("Por favor, preencha todos os campos.");
+            toast.error('Por favor, preencha todos os campos.');
+
             return;
         }
         if (!isValidFoto) {
@@ -61,9 +65,9 @@ const MoviesAdd = () => {
         axios.post(baseUrl, datapost)
             .then(response => {
                 if (response.data.success) {
-                    alert(response.data.message);
+                    toast.success(`Filme "${datapost.titulo}" criado com sucesso!`);
                 } else {
-                    alert("Erro ao salvar o filme: " + response.data.message);
+                    alert("Erro ao guardar o filme: " + response.data.message);
                 }
             }).catch(error => {
                 alert("Erro no servidor: " + error.message);
@@ -72,6 +76,7 @@ const MoviesAdd = () => {
 
     return (
         <div>
+            <Toaster richColors position="top-right" /> 
             <div className="form-group row mb-3">
                 <label htmlFor="title" className="col-sm-2 col-md-1 col-formlabel">Título</label>
                 <div className="col-sm-10">

@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 
+import { Toaster, toast } from 'sonner';
+
 const baseUrl = "http://localhost:3000";
 
 const MoviesEdit = () => {
@@ -81,7 +83,7 @@ const MoviesEdit = () => {
             .put(url, datapost)
             .then((response) => {
                 if (response.data.success) {
-                    alert("Filme atualizado com sucesso!");
+                    toast.success(`Filme "${datapost.titulo}" editado com sucesso!`);
                 } else {
                     alert("Erro ao atualizar o filme: " + response.data.message);
                 }
@@ -93,6 +95,7 @@ const MoviesEdit = () => {
 
     return (
         <div>
+            <Toaster richColors position="top-right" />
             <div className="form-group row mb-3">
                 <label htmlFor="inputPassword4" className="col-sm-2 col-md-1 col-formlabel">Título</label>
                 <div className="col-sm-10">
