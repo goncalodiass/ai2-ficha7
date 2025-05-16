@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Toaster, toast } from "sonner"; // Importando Sonner
+import { Link } from "react-router-dom"; // Certifique-se de importar o Link
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 
@@ -73,12 +74,9 @@ const Generos = () => {
                 <th>{data.id}</th>
                 <td>{data.genero}</td>
                 <td>
-                    <button
-                        className="btn btn-outline-info"
-                        onClick={() => toast("Funcionalidade de edição ainda não implementada.")}
-                    >
+                    <Link className="btn btn-outline-info" to={`/generos/edit/${data.id}`} >
                         Editar
-                    </button>
+                    </Link>                    
                 </td>
                 <td>
                     <button className="btn btn-outline-danger" onClick={() => handleDelete(data.id)}>

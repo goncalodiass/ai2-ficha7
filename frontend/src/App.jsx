@@ -7,6 +7,7 @@ import MoviesList from './view/MoviesList';
 import MoviesAdd from './view/MoviesAdd';
 import MoviesEdit from './view/MoviesEdit';
 import Generos from './view/Generos';
+import GenerosEdit from "./view/GenerosEdit";
 
 function App() {
   const [count, setCount] = useState(0)
@@ -39,6 +40,7 @@ function App() {
               <Route path="/filmes/add" element={<MoviesAdd />} />
               <Route path="/filmes/edit/:moviesId" element={<MoviesEdit />} />
               <Route path="/generos" element={<Generos />} />
+              <Route path="/generos/edit/:id" element={<GenerosEdit />} />
             </Routes>
           </div>
         </div>
