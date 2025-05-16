@@ -101,13 +101,31 @@ controllers.update = async (req, res) => {
 }
 
 controllers.delete = async (req, res) => {
-    // parâmetros por post
     const { id } = req.body;
-    // delete por sequelize
-    const del = await Genero.destroy({
-        where: { id: id }
-    })
-    res.json({ success: true, deleted: del, message: "Deleted successful" });
-}
 
-module.exports = controllers
+    try {
+        const result = await Genero.destroy({
+            where: { id }
+        });
+
+        if (result) {
+            res.json({ success: true, message: "Gênero eliminado com sucesso!" });
+        } else {
+            res.status(404).json({ success: false, message: "Gênero não encontrado." });
+        }
+    } catch (error) {
+        // Captura erros de chave estrangeira
+        if (error.name === "SequelizeForeignKeyConstraintError") {
+            res.status(400).json({
+                success: false,
+                error: "FOREIGN_KEY_CONSTRAINT",
+                message: "Não é possível eliminar o gênero, pois ele está associado a filmes."
+            });
+        } else {
+            console.error("Erro ao excluir gênero:", error);
+            res.status(500).json({ success: false, message: "Erro no servidor." });
+        }
+    }
+};
+
+module.exports = controllers;

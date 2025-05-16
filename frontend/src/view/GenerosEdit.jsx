@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import axios from "axios";
 import { Toaster, toast } from "sonner";
+import { Modal, Button } from "react-bootstrap";
 
 const baseUrl = "http://localhost:3000";
 
 const GenerosEdit = () => {
     const [genero, setGenero] = useState("");
+    const [generosExistentes, setGenerosExistentes] = useState([]); // Lista de gêneros existentes
     const { id } = useParams();
+    const [showModal, setShowModal] = useState(false);
 
     useEffect(() => {
-        // Busca os dados do gênero
         const fetchGenero = async () => {
             try {
                 const response = await axios.get(`${baseUrl}/genero/get/${id}`);
@@ -24,12 +26,32 @@ const GenerosEdit = () => {
             }
         };
 
+        const fetchGenerosExistentes = async () => {
+            try {
+                const response = await axios.get(`${baseUrl}/genero/list`);
+                if (response.data.success) {
+                    setGenerosExistentes(response.data.data.map((g) => g.genero.toLowerCase()));
+                } else {
+                    toast.error("Erro ao carregar a lista de gêneros.");
+                }
+            } catch (error) {
+                toast.error("Erro no servidor: " + error.message);
+            }
+        };
+
         fetchGenero();
+        fetchGenerosExistentes();
     }, [id]);
 
     const handleUpdate = async () => {
         if (!genero.trim()) {
             toast.error("O nome do gênero não pode estar vazio.");
+            return;
+        }
+
+        // Verifica se o nome do gênero já existe (ignorando o gênero atual)
+        if (generosExistentes.includes(genero.toLowerCase())) {
+            toast.error("Este nome de gênero já existe. Por favor, insira um nome diferente.");
             return;
         }
 
@@ -43,7 +65,11 @@ const GenerosEdit = () => {
         } catch (error) {
             toast.error("Erro no servidor: " + error.message);
         }
+        setShowModal(false); // Fecha o modal após a atualização
     };
+
+    const handleShowModal = () => setShowModal(true);
+    const handleCloseModal = () => setShowModal(false);
 
     return (
         <div className="container">
@@ -62,9 +88,30 @@ const GenerosEdit = () => {
                     />
                 </div>
             </div>
-            <button className="btn btn-primary" onClick={handleUpdate}>
-                Atualizar
-            </button>
+            <div className="d-flex align-items-center gap-2">
+                <button className="btn btn-primary" onClick={handleShowModal}>
+                    Atualizar
+                </button>
+                <Link to="/generos" className="btn btn-secondary">
+                    Voltar
+                </Link>
+            </div>
+
+            {/* Modal de Confirmação */}
+            <Modal show={showModal} onHide={handleCloseModal}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Confirmar Atualização</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>Tem certeza que deseja guardar as alterações no gênero?</Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleCloseModal}>
+                        Cancelar
+                    </Button>
+                    <Button variant="primary" onClick={handleUpdate}>
+                        Confirmar
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </div>
     );
 };
