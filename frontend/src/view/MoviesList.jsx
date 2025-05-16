@@ -5,8 +5,8 @@ import { Modal, Button, Card, Row, Col } from "react-bootstrap"; // Adicionado C
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 import { Toaster, toast } from "sonner";
+import API_URLS from "../config";
 
-const urlAPI = "http://localhost:3000/filmes/list";
 
 const MoviesList = () => {
     const [dataMovies, setdataMovies] = useState([]);
@@ -29,9 +29,8 @@ const MoviesList = () => {
     }, [searchTerm, dataMovies]);
 
     function LoadMovies() {
-        const url = "http://localhost:3000/filmes/list";
         axios
-            .get(url)
+            .get(API_URLS.FILMES.LIST)
             .then((res) => {
                 if (res.data.success) {
                     const data = res.data.data;
@@ -47,9 +46,8 @@ const MoviesList = () => {
     }
 
     function SendDelete(movieId) {
-        const baseUrl = "http://localhost:3000/filmes/delete";
         axios
-            .post(baseUrl, { id: movieId })
+            .post(API_URLS.FILMES.DELETE, { id: movieId })
             .then((response) => {
                 if (response.data.success) {
                     toast.success("Filme eliminado com sucesso!");

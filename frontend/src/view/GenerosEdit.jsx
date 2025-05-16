@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import axios from "axios";
 import { Toaster, toast } from "sonner";
 import { Modal, Button } from "react-bootstrap";
+import API_URLS from "../config";
 
 const baseUrl = "http://localhost:3000";
 
@@ -15,7 +16,7 @@ const GenerosEdit = () => {
     useEffect(() => {
         const fetchGenero = async () => {
             try {
-                const response = await axios.get(`${baseUrl}/genero/get/${id}`);
+                const response = await axios.get(API_URLS.GENEROS.GET(id));
                 if (response.data.success) {
                     setGenero(response.data.data[0].genero);
                 } else {
@@ -28,7 +29,7 @@ const GenerosEdit = () => {
 
         const fetchGenerosExistentes = async () => {
             try {
-                const response = await axios.get(`${baseUrl}/genero/list`);
+                const response = await axios.get(API_URLS.GENEROS.LIST);
                 if (response.data.success) {
                     setGenerosExistentes(response.data.data.map((g) => g.genero.toLowerCase()));
                 } else {
@@ -56,7 +57,7 @@ const GenerosEdit = () => {
         }
 
         try {
-            const response = await axios.put(`${baseUrl}/genero/update/${id}`, { genero });
+            const response = await axios.put(API_URLS.GENEROS.UPDATE(id), { genero });
             if (response.data.success) {
                 toast.success("Gênero atualizado com sucesso!");
             } else {

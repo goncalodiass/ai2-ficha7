@@ -4,6 +4,7 @@ import "bootstrap/dist/js/bootstrap.bundle.min";
 import axios from 'axios';
 
 import { Toaster, toast } from 'sonner';
+import API_URLS from "../config";
 
 const MoviesAdd = () => {
     const [campTítulo, setcampTítulo] = useState("");
@@ -16,7 +17,7 @@ const MoviesAdd = () => {
     useEffect(() => {
         const fetchGeneros = async () => {
             try {
-                const response = await axios.get("http://localhost:3000/genero/list");
+                const response = await axios.get(API_URLS.GENEROS.LIST);
                 if (response.data.success) {
                     setGeneros(response.data.data);
                 } else {
@@ -55,14 +56,13 @@ const MoviesAdd = () => {
             return;
         }
 
-        const baseUrl = "http://localhost:3000/filmes/create";
         const datapost = {
             titulo: campTítulo,
             descricao: campDescrição,
             foto: campFoto,
             genero: selectGenero
         };
-        axios.post(baseUrl, datapost)
+        axios.post(API_URLS.FILMES.CREATE, datapost)
             .then(response => {
                 if (response.data.success) {
                     toast.success(`Filme "${datapost.titulo}" criado com sucesso!`);

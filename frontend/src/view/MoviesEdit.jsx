@@ -3,8 +3,8 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { Modal, Button } from "react-bootstrap"; // Importando Modal e Button do React-Bootstrap
 import { Toaster, toast } from "sonner";
+import API_URLS from "../config";
 
-const baseUrl = "http://localhost:3000";
 
 const MoviesEdit = () => {
     const [campTítulo, setcampTítulo] = useState("");
@@ -21,9 +21,8 @@ const MoviesEdit = () => {
 
     useEffect(() => {
         const fetchMovie = async () => {
-            const url = `${baseUrl}/filmes/get/${moviesId}`;
             try {
-                const res = await axios.get(url);
+                const res = await axios.get(API_URLS.FILMES.GET(moviesId));
                 if (res.data.success) {
                     const data = res.data.data[0];
                     setcampTítulo(data.título);
@@ -47,7 +46,7 @@ const MoviesEdit = () => {
 
         const fetchGeneros = async () => {
             try {
-                const response = await axios.get(`${baseUrl}/genero/list`);
+                const response = await axios.get(API_URLS.GENEROS.LIST);
                 if (response.data.success) {
                     setGeneros(response.data.data);
                 } else {
@@ -101,7 +100,6 @@ const MoviesEdit = () => {
     };
 
     function SendUpdate() {
-        const url = `${baseUrl}/filmes/update/${moviesId}`;
         const datapost = {
             titulo: campTítulo,
             descricao: campDescrição,
@@ -110,7 +108,7 @@ const MoviesEdit = () => {
         };
 
         axios
-            .put(url, datapost)
+            .put(API_URLS.FILMES.UPDATE(moviesId), datapost)
             .then((response) => {
                 if (response.data.success) {
                     toast.success(`Filme "${datapost.titulo}" editado com sucesso!`);

@@ -5,6 +5,7 @@ import { Link } from "react-router-dom"; // Certifique-se de importar o Link
 import { Modal, Button } from "react-bootstrap"; // Importando Modal e Button do React-Bootstrap
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
+import API_URLS from "../config";
 
 const Generos = () => {
     const [dataGeneros, setDataGeneros] = useState([]);
@@ -18,7 +19,7 @@ const Generos = () => {
 
     const fetchGeneros = async () => {
         try {
-            const response = await axios.get("http://localhost:3000/genero/list");
+            const response = await axios.get(API_URLS.GENEROS.LIST);
             if (response.data.success) {
                 setDataGeneros(response.data.data);
             } else {
@@ -48,7 +49,7 @@ const Generos = () => {
         }
 
         try {
-            const response = await axios.post("http://localhost:3000/genero/create", {
+            const response = await axios.post(API_URLS.GENEROS.CREATE, {
                 genero: novoGenero,
             });
             if (response.data.success) {
@@ -65,9 +66,9 @@ const Generos = () => {
 
     const handleDelete = async () => {
         try {
-            const response = await axios.post("http://localhost:3000/genero/delete", { id: generoIdToDelete });
+            const response = await axios.post(API_URLS.GENEROS.DELETE, { id: generoIdToDelete });
             if (response.data.success) {
-                toast.success("Gênero excluído com sucesso!");
+                toast.success("Gênero eliminado com sucesso!");
                 fetchGeneros(); // Atualiza a lista após exclusão
             } else if (response.data.error === "FOREIGN_KEY_CONSTRAINT") {
                 toast.error("Não é possível excluir o gênero, pois ele está associado a filmes.");
