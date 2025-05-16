@@ -24,14 +24,13 @@ function App() {
           </button>
           <div className="collapse navbar-collapse"
             id="navbarSupportedContent">
-                          <div className="d-flex align-items-center gap-2">
-
-            <Link className="btn btn-success " to="/filmes/add">
-              Add Movie
-            </Link>
-            <Link className="btn btn-success " to="/generos">
-              Generos
-            </Link>
+            <div className="d-flex align-items-center gap-2">
+              <Link className="btn btn-success " to="/filmes/add">
+                Add Movie
+              </Link>
+              <Link className="btn btn-success " to="/generos">
+                Generos
+              </Link>
             </div>
           </div>
         </nav>
