@@ -32,14 +32,12 @@ controllers.testdata = async (req, res) => {
 
 controllers.list = async (req, res) => {
     const data = await Filmes.findAll({
+        where: { ativo: true }, // Apenas filmes ativos
         include: [Genero]
     })
-        .then(function (data) {
-            return data;
-        })
-        .catch(error => {
-            return error;
-        });
+        .then((data) => data)
+        .catch((error) => error);
+
     res.json({ success: true, data: data });
 }
 
@@ -110,28 +108,23 @@ controllers.update = async (req, res) => {
 };
 
 controllers.delete = async (req, res) => {
-    const { id } = req.body; // Recebe o ID do filme a ser deletado
+    const { id } = req.body;
 
     try {
-        const result = await Filmes.destroy({
-            where: { id: id },
-        });
+        const result = await Filmes.update(
+            { ativo: false },
+            { where: { id } }
+        );
 
-        if (result) {
-            res.json({ success: true, message: "Filme deletado com sucesso!" });
+        if (result[0] > 0) {
+            res.json({ success: true, message: "Filme desativado com sucesso!" });
         } else {
-            res.json({ success: false, message: "Filme não encontrado!" });
+            res.status(404).json({ success: false, message: "Filme não encontrado." });
         }
     } catch (error) {
-        console.error("Erro ao deletar filme:", error);
-        res.status(500).json({
-            success: false,
-            message: "Erro ao deletar o filme.",
-            error: error.message,
-        });
+        console.error("Erro ao desativar filme:", error);
+        res.status(500).json({ success: false, message: "Erro no servidor." });
     }
 };
-
-
 
 module.exports = controllers;

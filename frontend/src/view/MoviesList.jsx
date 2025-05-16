@@ -1,57 +1,66 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-
+import { Modal, Button } from "react-bootstrap"; // Importando Modal e Button do React-Bootstrap
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
-
-import { Toaster, toast } from 'sonner';
+import { Toaster, toast } from "sonner";
 
 const urlAPI = "http://localhost:3000/filmes/list";
 
 const MoviesList = () => {
     const [dataMovies, setdataMovies] = useState([]);
+    const [movieIdToDelete, setMovieIdToDelete] = useState(null); // Estado para armazenar o ID do filme a ser excluído
+    const [showModal, setShowModal] = useState(false); // Estado para controlar o modal
+
     useEffect(() => {
         LoadMovies();
     }, []);
+
     function LoadMovies() {
         const url = "http://localhost:3000/filmes/list";
-        axios.get(url)
-            .then(res => {
+        axios
+            .get(url)
+            .then((res) => {
                 if (res.data.success) {
                     const data = res.data.data;
                     setdataMovies(data);
                 } else {
-                    alert("Error Web Service!");
+                    toast.error("Erro ao carregar os filmes!");
                 }
             })
-            .catch(error => {
-                alert(error)
+            .catch((error) => {
+                toast.error("Erro no servidor: " + error.message);
             });
     }
 
     function SendDelete(movieId) {
-        // url do backend
-        const baseUrl = "http://localhost:3000/filmes/delete"
-        // network
-        axios.post(baseUrl, {
-            id: movieId
-        })
-            .then(response => {
+        const baseUrl = "http://localhost:3000/filmes/delete";
+        axios
+            .post(baseUrl, { id: movieId })
+            .then((response) => {
                 if (response.data.success) {
-                    //alert("Filme deletado com sucesso!");
-                    toast.success(`Filme "${movieId.titulo}" eliminado com sucesso!`);
-
-                    LoadMovies();
+                    toast.success("Filme eliminado com sucesso!");
+                    LoadMovies(); // Atualiza a lista de filmes
                 } else {
-                    alert("Erro ao deletar o filme: " + res.data.message);
-
+                    toast.error("Erro ao eliminar o filme: " + response.data.message);
                 }
             })
-            .catch(error => {
-                alert("Erro no servidor: " + error.message);
+            .catch((error) => {
+                toast.error("Erro no servidor: " + error.message);
             });
+        setShowModal(false); // Fecha o modal após a exclusão
     }
+
+    const handleShowModal = (id) => {
+        setMovieIdToDelete(id); // Define o ID do filme a ser excluído
+        setShowModal(true); // Exibe o modal
+    };
+
+    const handleCloseModal = () => {
+        setShowModal(false); // Fecha o modal
+        setMovieIdToDelete(null); // Limpa o ID do filme
+    };
 
     function LoadFillData() {
         return dataMovies.map((data, index) => {
@@ -72,7 +81,7 @@ const MoviesList = () => {
                         <Link className="btn btn-outline-info" to={"filmes/edit/" + data.id} >Edit</Link>
                     </td>
                     <td>
-                        <button className="btn btn-outline-danger" onClick={() => SendDelete(data.id)} // Chama a função de deletar
+                        <button className="btn btn-outline-danger" onClick={() => handleShowModal(data.id)} // Chama a função de deletar
                         >
                             Delete
                         </button>
@@ -82,28 +91,46 @@ const MoviesList = () => {
         });
     }
 
-
     return (
         <>
-        <Toaster richColors position="top-right" />
+            <Toaster richColors position="top-right" />
 
-        <table className="table table-hover table-striped">
-            <thead className="thead-dark">
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">título</th>
-                    <th scope="col">descrição</th>
-                    <th scope="col">genero</th>
-                    <th scope="col">foto</th>
-                    <th colSpan="2">action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <LoadFillData />
+            <table className="table table-hover table-striped">
+                <thead className="thead-dark">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">título</th>
+                        <th scope="col">descrição</th>
+                        <th scope="col">genero</th>
+                        <th scope="col">foto</th>
+                        <th colSpan="2">action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <LoadFillData />
+                </tbody>
+            </table>
 
-            </tbody>
-        </table>
+            {/* Modal de Confirmação */}
+            <Modal show={showModal} onHide={handleCloseModal}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Confirmar Eliminação</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>Tem certeza que deseja apagar este filme?</Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleCloseModal}>
+                        Cancelar
+                    </Button>
+                    <Button
+                        variant="danger"
+                        onClick={() => SendDelete(movieIdToDelete)}
+                    >
+                        Confirmar
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </>
     );
 };
+
 export default MoviesList;

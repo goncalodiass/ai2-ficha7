@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-
-import { Toaster, toast } from 'sonner';
+import { Modal, Button } from "react-bootstrap"; // Importando Modal e Button do React-Bootstrap
+import { Toaster, toast } from "sonner";
 
 const baseUrl = "http://localhost:3000";
 
@@ -14,11 +14,12 @@ const MoviesEdit = () => {
     const [stringRole, setstringRole] = useState("");
     const [selectGenero, setselectGenero] = useState("");
     const [generos, setGeneros] = useState([]);
+    const [showModal, setShowModal] = useState(false); // Estado para controlar o modal
+    const [originalData, setOriginalData] = useState({}); // Armazena os valores originais do filme
 
     const { moviesId } = useParams();
 
     useEffect(() => {
-        // Busca os dados do filme
         const fetchMovie = async () => {
             const url = `${baseUrl}/filmes/get/${moviesId}`;
             try {
@@ -30,25 +31,30 @@ const MoviesEdit = () => {
                     setcampFoto(data.foto);
                     setstringRole(data.genero.genero);
                     setselectGenero(data.generoId);
+                    setOriginalData({
+                        título: data.título,
+                        descrição: data.descrição,
+                        foto: data.foto,
+                        generoId: data.generoId,
+                    }); // Salva os valores originais
                 } else {
-                    alert("Erro ao carregar os dados do filme.");
+                    toast.error("Erro ao carregar os dados do filme.");
                 }
             } catch (error) {
-                alert("Erro no servidor: " + error.message);
+                toast.error("Erro no servidor: " + error.message);
             }
         };
 
-        // Pesquisar os gêneros da API
         const fetchGeneros = async () => {
             try {
                 const response = await axios.get(`${baseUrl}/genero/list`);
                 if (response.data.success) {
                     setGeneros(response.data.data);
                 } else {
-                    alert("Erro ao carregar os gêneros.");
+                    toast.error("Erro ao carregar os gêneros.");
                 }
             } catch (error) {
-                alert("Erro ao buscar os gêneros: " + error.message);
+                toast.error("Erro ao buscar os gêneros: " + error.message);
             }
         };
 
@@ -56,7 +62,6 @@ const MoviesEdit = () => {
         fetchGeneros();
     }, [moviesId]);
 
-    // Validação do link da foto
     useEffect(() => {
         if (campFoto) {
             const img = new Image();
@@ -64,9 +69,36 @@ const MoviesEdit = () => {
             img.onerror = () => setIsValidFoto(false);
             img.src = campFoto;
         } else {
-            setIsValidFoto(true); // Reseta a validação se o campo estiver vazio
+            setIsValidFoto(true);
         }
     }, [campFoto]);
+
+    const handleShowModal = () => {
+        setShowModal(true); // Exibe o modal
+    };
+
+    const handleCloseModal = () => {
+        setShowModal(false); // Fecha o modal
+    };
+
+    const handleConfirmUpdate = () => {
+        if (isDataChanged()) {
+            SendUpdate();
+        } else {
+            toast.error("Nenhuma alteração foi feita nos campos.");
+        }
+        setShowModal(false);
+    };
+
+    const isDataChanged = () => {
+        // Verifica se os valores atuais são diferentes dos originais
+        return (
+            campTítulo !== originalData.título ||
+            campDescrição !== originalData.descrição ||
+            campFoto !== originalData.foto ||
+            selectGenero !== originalData.generoId
+        );
+    };
 
     function SendUpdate() {
         const url = `${baseUrl}/filmes/update/${moviesId}`;
@@ -77,19 +109,25 @@ const MoviesEdit = () => {
             genero: selectGenero,
         };
 
-        console.log("Dados enviados para o backend:", datapost);
-
         axios
             .put(url, datapost)
             .then((response) => {
                 if (response.data.success) {
                     toast.success(`Filme "${datapost.titulo}" editado com sucesso!`);
+                    
+                    // Atualiza os valores originais para refletir os novos dados
+                    setOriginalData({
+                        título: campTítulo,
+                        descrição: campDescrição,
+                        foto: campFoto,
+                        generoId: selectGenero,
+                    });
                 } else {
-                    alert("Erro ao atualizar o filme: " + response.data.message);
+                    toast.error("Erro ao atualizar o filme: " + response.data.message);
                 }
             })
             .catch((error) => {
-                alert("Erro no servidor: " + error.message);
+                toast.error("Erro no servidor: " + error.message);
             });
     }
 
@@ -165,19 +203,35 @@ const MoviesEdit = () => {
                         </option>
                         {generos.map((genero) => (
                             <option key={genero.id} value={genero.id}>
-                                {genero.genero} 
+                                {genero.genero}
                             </option>
                         ))}
                     </select>
                 </div>
             </div>
             <button
-                type="submit"
+                type="button"
                 className="btn btn-primary"
-                onClick={SendUpdate}
+                onClick={handleShowModal} // Exibe o modal ao clicar
             >
                 Atualizar
             </button>
+
+            {/* Modal de Confirmação */}
+            <Modal show={showModal} onHide={handleCloseModal}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Confirmar Atualização</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>Tem certeza que deseja atualizar este filme?</Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleCloseModal}>
+                        Cancelar
+                    </Button>
+                    <Button variant="primary" onClick={handleConfirmUpdate}>
+                        Confirmar
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </div>
     );
 };

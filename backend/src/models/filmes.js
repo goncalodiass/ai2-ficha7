@@ -1,4 +1,3 @@
-
 var Sequelize = require('sequelize');
 var sequelize = require('./database');
 
@@ -29,9 +28,13 @@ var Filmes = sequelize.define('filmes', {
             key: 'id'
         },
     },
+    ativo: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: true, // Por padrão, o filme será ativo
+    }
 }, 
 {
-        timestamps: false,
+    timestamps: false,
 });
 
 Filmes.belongsTo(Genero);

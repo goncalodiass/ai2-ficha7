@@ -32,15 +32,14 @@ controllers.testdata = async (req, res) => {
 }
 
 controllers.list = async (req, res) => {
-    const data = await Genero.findAll()
-        .then(function (data) {
-            return data;
-        })
-        .catch(error => {
-            return error;
-        });
+    const data = await Genero.findAll({
+        where: { ativo: true }, // Apenas gêneros ativos
+    })
+        .then((data) => data)
+        .catch((error) => error);
+
     res.json({ success: true, data: data });
-}
+};
 
 controllers.get = async (req, res) => {
     const { id } = req.params;
@@ -104,27 +103,33 @@ controllers.delete = async (req, res) => {
     const { id } = req.body;
 
     try {
-        const result = await Genero.destroy({
-            where: { id }
+        // Verifica se o gênero está associado a filmes
+        const filmesAssociados = await sequelize.models.filmes.count({
+            where: { generoId: id },
         });
 
-        if (result) {
-            res.json({ success: true, message: "Gênero eliminado com sucesso!" });
+        if (filmesAssociados > 0) {
+            return res.status(400).json({
+                success: false,
+                error: "FOREIGN_KEY_CONSTRAINT",
+                message: "Não é possível desativar o gênero, pois ele está associado a filmes.",
+            });
+        }
+
+        // Desativa o gênero
+        const result = await Genero.update(
+            { ativo: false },
+            { where: { id } }
+        );
+
+        if (result[0] > 0) {
+            res.json({ success: true, message: "Gênero desativado com sucesso!" });
         } else {
             res.status(404).json({ success: false, message: "Gênero não encontrado." });
         }
     } catch (error) {
-        // Captura erros de chave estrangeira
-        if (error.name === "SequelizeForeignKeyConstraintError") {
-            res.status(400).json({
-                success: false,
-                error: "FOREIGN_KEY_CONSTRAINT",
-                message: "Não é possível eliminar o gênero, pois ele está associado a filmes."
-            });
-        } else {
-            console.error("Erro ao excluir gênero:", error);
-            res.status(500).json({ success: false, message: "Erro no servidor." });
-        }
+        console.error("Erro ao desativar gênero:", error);
+        res.status(500).json({ success: false, message: "Erro no servidor." });
     }
 };
 
