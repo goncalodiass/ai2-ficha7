@@ -300,21 +300,26 @@ const MoviesList = () => {
 
             {/* Exibição Condicional */}
             {viewMode === "table" ? (
-                <table className="table align-middle shadow-sm border rounded overflow-hidden table-striped">
-                    <thead className="table-dark">
-                        <tr className="text-uppercase text-secondary" style={{ fontSize: "1rem" }}>
-                            <th>&nbsp; #</th>
-                            <th>Título</th>
-                            <th>Descrição</th>
-                            <th>Gênero</th>
-                            <th>Foto</th>
-                            <th className="text-center">Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <LoadTableData />
-                    </tbody>
-                </table>
+
+                <div className="table-responsive">
+                    <table className="table align-middle border overflow-hidden table-striped mb-0  shadow rounded">
+                        <thead className="table-dark">
+                            <tr className="text-uppercase text-secondary" style={{ fontSize: "1rem" }}>
+                                <th>&nbsp; #</th>
+                                <th>Título</th>
+                                <th>Descrição</th>
+                                <th>Gênero</th>
+                                <th>Foto</th>
+                                <th className="text-center">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <LoadTableData />
+                        </tbody>
+                    </table>
+                </div>
+
+
 
             ) : (
                 <Row>
