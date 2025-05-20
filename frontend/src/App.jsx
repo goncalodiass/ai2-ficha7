@@ -2,6 +2,7 @@ import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import { BrowserRouter as Router, Route, Link, Routes } from "react-router-dom";
+import { Navbar, Container, Nav, Button } from 'react-bootstrap';
 
 import MoviesList from './view/MoviesList';
 import MoviesAdd from './view/MoviesAdd';
@@ -15,25 +16,24 @@ function App() {
   return (
     <Router>
       <div className="App">
-        <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-          <a className="navbar-brand text-danger"
-            href="/">&nbsp; Movies</a>
-          <button className="navbar-toggler" type="button" datatoggle="collapse" data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" ariaexpanded="false" aria-label="Toggle navigation">
-            <span className="navbar-toggler-icon"></span>
-          </button>
-          <div className="collapse navbar-collapse"
-            id="navbarSupportedContent">
-            <div className="d-flex align-items-center gap-2">
-              <Link className="btn btn-success " to="/filmes/add">
-                Add Movie
-              </Link>
-              <Link className="btn btn-success " to="/generos">
-                Generos
-              </Link>
-            </div>
-          </div>
-        </nav>
+        <Navbar bg="dark" variant="dark" expand="lg">
+          <Container>
+            <Navbar.Brand as={Link} to="/">
+              <span className="text-danger">Movies</span>
+            </Navbar.Brand>
+            <Navbar.Toggle aria-controls="basic-navbar-nav" />
+            <Navbar.Collapse id="basic-navbar-nav">
+              <Nav className="ms-auto d-flex gap-2">
+                <Button as={Link} to="/filmes/add" variant="success">
+                  Add Movie
+                </Button>
+                <Button as={Link} to="/generos" variant="success">
+                  Generos
+                </Button>
+              </Nav>
+            </Navbar.Collapse>
+          </Container>
+        </Navbar>
         <div className="container py-4">
           <div className="row">
             <Routes>
