@@ -33,7 +33,7 @@ controllers.testdata = async (req, res) => {
 
 controllers.list = async (req, res) => {
     const data = await Genero.findAll({
-        where: { ativo: true }, // Apenas gêneros ativos
+        where: { ativo: true }, // Apenas Gêneros ativos
     })
         .then((data) => data)
         .catch((error) => error);
@@ -103,7 +103,7 @@ controllers.delete = async (req, res) => {
     const { id } = req.body;
 
     try {
-        // Verifica se o gênero está associado a filmes
+        // Verifica se o Genero está associado a filmes
         const filmesAssociados = await sequelize.models.filmes.count({
             where: { generoId: id },
         });
@@ -112,23 +112,23 @@ controllers.delete = async (req, res) => {
             return res.status(400).json({
                 success: false,
                 error: "FOREIGN_KEY_CONSTRAINT",
-                message: "Não é possível desativar o gênero, pois ele está associado a filmes.",
+                message: "Não é possível desativar o Genero, pois ele está associado a filmes.",
             });
         }
 
-        // Desativa o gênero
+        // Desativa o Genero
         const result = await Genero.update(
             { ativo: false },
             { where: { id } }
         );
 
         if (result[0] > 0) {
-            res.json({ success: true, message: "Gênero desativado com sucesso!" });
+            res.json({ success: true, message: "Genero desativado com sucesso!" });
         } else {
-            res.status(404).json({ success: false, message: "Gênero não encontrado." });
+            res.status(404).json({ success: false, message: "Genero não encontrado." });
         }
     } catch (error) {
-        console.error("Erro ao desativar gênero:", error);
+        console.error("Erro ao desativar Genero:", error);
         res.status(500).json({ success: false, message: "Erro no servidor." });
     }
 };

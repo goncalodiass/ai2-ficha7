@@ -49,7 +49,7 @@ const FormFilme = ({
   };
 
   return (
-    <div className="container mt-5 mb-5 p-4 rounded shadow-sm bg-white">
+    <div className="container mt-5 mb-5 p-4 rounded shadow bg-white">
       <Toaster richColors position="top-right" />
       <h2 className="fw-bold mb-4">
         {modo === "adicionar" ? "🎬 Adicionar Novo Filme" : "✏️ Editar Filme"}
@@ -115,7 +115,7 @@ const FormFilme = ({
 
 
       <div className="mb-4">
-        <label className="form-label fw-semibold">Gênero</label>
+        <label className="form-label fw-semibold">Genero</label>
         <select
           className="form-select shadow-sm"
           style={{ borderRadius: "12px", padding: "10px 15px" }}
@@ -123,7 +123,7 @@ const FormFilme = ({
           onChange={(e) => onChange("generoId", e.target.value)}
         >
           <option value="" disabled>
-            Escolha um gênero...
+            Escolha um Genero...
           </option>
           {generos.map((genero) => (
             <option key={genero.id} value={genero.id}>

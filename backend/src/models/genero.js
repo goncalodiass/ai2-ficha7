@@ -5,7 +5,7 @@ var Genero = sequelize.define('genero', {
     genero: Sequelize.STRING,
     ativo: {
         type: Sequelize.BOOLEAN,
-        defaultValue: true, // Por padrão, o gênero será ativo
+        defaultValue: true, // Por padrão, o Gênero será ativo
     }
 },
 {

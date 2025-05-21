@@ -51,10 +51,10 @@ const MoviesEdit = () => {
                 if (response.data.success) {
                     setGeneros(response.data.data);
                 } else {
-                    toast.error("Erro ao carregar os gêneros.");
+                    toast.error("Erro ao carregar os Generos.");
                 }
             } catch (error) {
-                toast.error("Erro ao buscar os gêneros: " + error.message);
+                toast.error("Erro ao buscar os Generos: " + error.message);
             }
         };
 

@@ -27,10 +27,10 @@ const MoviesAdd = () => {
                 if (response.data.success) {
                     setGeneros(response.data.data);
                 } else {
-                    alert("Erro ao carregar os gêneros.");
+                    alert("Erro ao carregar os Generos.");
                 }
             } catch (error) {
-                alert("Erro ao buscar os gêneros: " + error.message);
+                alert("Erro ao buscar os Generos: " + error.message);
             }
         };
 

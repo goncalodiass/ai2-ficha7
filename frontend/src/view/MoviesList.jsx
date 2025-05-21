@@ -240,7 +240,7 @@ const MoviesList = () => {
             <Toaster richColors position="top-right" />
             <div className="mt-5 mb-4">
                 <h2 className="fw-bold" style={{ fontSize: '2rem', color: '#212529' }}>
-                    🎬 Lista de Filmes
+                    Lista de Filmes
                 </h2>
             </div>
 
@@ -308,7 +308,7 @@ const MoviesList = () => {
                                 <th>&nbsp; #</th>
                                 <th>Título</th>
                                 <th>Descrição</th>
-                                <th>Gênero</th>
+                                <th>Genero</th>
                                 <th>Foto</th>
                                 <th className="text-center">Ações</th>
                             </tr>
