@@ -302,7 +302,7 @@ const MoviesList = () => {
             {viewMode === "table" ? (
 
                 <div className="table-responsive">
-                    <table className="table align-middle border overflow-hidden table-striped mb-0  shadow rounded">
+                    <table className="table align-middle border overflow-hidden table-striped mb-0 shadow-sm rounded">
                         <thead className="table-dark">
                             <tr className="text-uppercase text-secondary" style={{ fontSize: "1rem" }}>
                                 <th>&nbsp; #</th>
