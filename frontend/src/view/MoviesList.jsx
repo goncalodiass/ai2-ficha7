@@ -7,6 +7,8 @@ import "bootstrap/dist/js/bootstrap.bundle.min";
 import { Toaster, toast } from "sonner";
 import API_URLS from "../config";
 
+import { FaTrash, FaEdit, FaSearch } from "react-icons/fa";
+import { MdModeEdit } from "react-icons/md";
 
 const MoviesList = () => {
     const [dataMovies, setdataMovies] = useState([]);
@@ -103,30 +105,23 @@ const MoviesList = () => {
                     <td>
                         <div className="d-flex justify-content-center gap-2">
                             <Link
-                                className="fw-semibold text-dark shadow"
-                                style={{
-                                    backgroundColor: "#ffffff",
-                                    borderRadius: "50px",
-                                    padding: "6px 16px",
-                                    border: "2px solid #ffffff",
-                                }}
+                                className="btn d-flex align-items-center justify-content-center"
+                                style={{ width: "40px", height: "40px" }}
                                 to={`filmes/edit/${data.id}`}
+                                title="Editar"
                             >
-                                Editar
+                                <MdModeEdit />
                             </Link>
                             <button
-                                className="fw-semibold text-dark shadow"
-                                style={{
-                                    backgroundColor: "#ffffff",
-                                    borderRadius: "50px",
-                                    padding: "6px 16px",
-                                    border: "2px solid #dc3545",
-                                }}
+                                className="btn d-flex align-items-center justify-content-center"
+                                style={{ width: "40px", height: "40px" }}
                                 onClick={() => handleShowModal(data.id)}
+                                title="Eliminar"
                             >
-                                Eliminar
+                                <FaTrash />
                             </button>
                         </div>
+
                     </td>
                 </tr>
             );
@@ -201,32 +196,25 @@ const MoviesList = () => {
                         </div>
 
                         {/* Botões na mesma linha */}
-                        <div className="d-flex gap-2">
+                        <div className="d-flex justify-content-end gap-2">
                             <button
-                                className="btn text-dark fw-semibold"
-                                style={{
-                                    backgroundColor: '#fff',
-                                    borderRadius: '50px',
-                                    padding: '10px',
-                                    width: '50%',
-                                }}
+                                className="btn bg-info rounded-circle d-flex align-items-center justify-content-center"
+                                style={{ width: "40px", height: "40px" }}
                                 onClick={() => (window.location.href = `/filmes/edit/${movie.id}`)}
+                                title="Editar"
                             >
-                                Editar
+                                <FaEdit />
                             </button>
                             <button
-                                className="btn text-dark fw-semibold"
-                                style={{
-                                    backgroundColor: '#fff',
-                                    borderRadius: '50px',
-                                    padding: '10px',
-                                    width: '50%',
-                                }}
+                                className="btn bg-danger rounded-circle d-flex align-items-center justify-content-center"
+                                style={{ width: "40px", height: "40px" }}
                                 onClick={() => handleShowModal(movie.id)}
+                                title="Eliminar"
                             >
-                                Eliminar
+                                <FaTrash />
                             </button>
                         </div>
+
                     </div>
                 </div>
             </Col>
@@ -244,21 +232,30 @@ const MoviesList = () => {
                 </h2>
             </div>
 
-            <div className="mb-4">
+            <div className="mb-4 w-50 position-relative">
+                <FaSearch
+                    style={{
+                        position: "absolute",
+                        top: "50%",
+                        left: "16px",
+                        transform: "translateY(-50%)",
+                        color: "#6c757d"
+                    }}
+                />
                 <input
                     type="text"
-                    className="form-control shadow rounded-pill w-50"
+                    className="form-control shadow rounded-pill ps-5"
                     style={{
-                        borderRadius: '12px',
-                        padding: '12px 20px',
-                        fontSize: '1rem',
-                        border: '1px solid #dee2e6',
+                        padding: "12px 20px",
+                        fontSize: "1rem",
+                        border: "1px solid #dee2e6"
                     }}
-                    placeholder="🔎 Pesquisar filmes pelo título..."
+                    placeholder="Pesquisar filmes pelo título..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
             </div>
+
 
 
             {/* Botões para alternar entre tabela e cards */}
@@ -302,7 +299,7 @@ const MoviesList = () => {
             {viewMode === "table" ? (
 
                 <div className="table-responsive">
-                    <table className="table align-middle border overflow-hidden table-striped mb-0 shadow-sm rounded">
+                    <table className="table align-middle overflow-hidden table-striped mb-0 shadow-sm rounded">
                         <thead className="table-dark">
                             <tr className="text-uppercase text-secondary" style={{ fontSize: "1rem" }}>
                                 <th>&nbsp; #</th>
