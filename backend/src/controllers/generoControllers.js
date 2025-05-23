@@ -1,13 +1,14 @@
 var Genero = require('../models/genero');
 var sequelize = require('../models/database');
 
-const controllers = {}
+const controllers = {};
 
 sequelize.sync();
 
 controllers.testdata = async (req, res) => {
     const response = await sequelize.sync().then(function () {
-        /** APAGAR após a primeira EXECUÇÃO 
+        /*
+        //APAGAR após a primeira EXECUÇÃO 
         // Cria Genero
         Genero.create({
             genero: 'Comédia'
@@ -32,76 +33,64 @@ controllers.testdata = async (req, res) => {
 }
 
 controllers.list = async (req, res) => {
-    const data = await Genero.findAll({
-        where: { ativo: true }, // Apenas Gêneros ativos
-    })
-        .then((data) => data)
-        .catch((error) => error);
-
-    res.json({ success: true, data: data });
+    try {
+        const data = await Genero.findAll({
+            where: { ativo: true }, // Apenas generos ativos
+        });
+        res.json({ success: true, data: data });
+    } catch (error) {
+        console.error("Erro ao listar generos:", error);
+        res.status(500).json({ success: false, message: "Erro ao listar generos." });
+    }
 };
 
 controllers.get = async (req, res) => {
     const { id } = req.params;
-    const data = await Genero.findAll({
-        where: { id: id }
-    })
-        .then(function (data) {
-            return data;
-        })
-        .catch(error => {
-            return error;
+    try {
+        const data = await Genero.findAll({
+            where: { id: id },
         });
-    res.json({ success: true, data: data });
-}
+        res.json({ success: true, data: data });
+    } catch (error) {
+        console.error("Erro ao obter genero:", error);
+        res.status(500).json({ success: false, message: "Erro ao obter genero." });
+    }
+};
 
 controllers.create = async (req, res) => {
-    // data 
     const { genero } = req.body;
-
-    // create 
-    const data = await Genero.create({
-        genero: genero,
-    })
-        .then(function (data) {
-            return data;
-        })
-        .catch(error => {
-            console.log("Erro: "+error)
-            return error;
+    try {
+        const data = await Genero.create({
+            genero: genero,
         });
-    // return res
-    res.status(200).json({ 
-        success: true,
-        message: "Registado",
-        data: data 
-    });    
+        res.status(200).json({
+            success: true,
+            message: "Genero registrado com sucesso!",
+            data: data,
+        });
+    } catch (error) {
+        console.error("Erro ao criar gênero:", error);
+        res.status(500).json({ success: false, message: "Erro ao criar genero." });
+    }
 };
 
 controllers.update = async (req, res) => {
-    // parameter get id
     const { id } = req.params;
-    // parameter POST
     const { genero } = req.body;
-    // Update data
-    const data = await Genero.update({
-        genero: genero
-    },
-        {
-            where: { id: id }
-        })
-        .then(function (data) {
-            return data;
-        })
-        .catch(error => {
-            return error;
-        })
-    res.json({ success: true, data: data, message: "Updated successful" });
-}
+    try {
+        const data = await Genero.update(
+            { genero: genero },
+            { where: { id: id } }
+        );
+        res.json({ success: true, data: data, message: "Genero atualizado com sucesso!" });
+    } catch (error) {
+        console.error("Erro ao atualizar genero:", error);
+        res.status(500).json({ success: false, message: "Erro ao atualizar genero." });
+    }
+};
 
 controllers.delete = async (req, res) => {
     const { id } = req.body;
-
     try {
         // Verifica se o Genero está associado a filmes
         const filmesAssociados = await sequelize.models.filmes.count({
