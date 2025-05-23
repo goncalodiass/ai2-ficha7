@@ -6,12 +6,10 @@ This is a project for managing movies and genres, developed with **React** on th
 ## Project Structure
 
 ```
-
 .
 ├── backend/    # Project backend (Node.js + Express + Sequelize)
 ├── frontend/   # Project frontend (React + Vite)
 └── README.md   # Project documentation
-
 ````
 
 ## Prerequisites
@@ -24,9 +22,9 @@ Make sure you have the following tools installed on your machine:
 ## Backend Setup
 
 1. Navigate to the backend folder:
-   ``bash
+   ```bash
    cd backend
-``
+   ```
 
 2. Install the dependencies:
 
